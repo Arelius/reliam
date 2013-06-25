@@ -34,9 +34,11 @@ recvBox = (box) ->
           fetch.on 'message', (msg) ->
             console.log msg
             msg.on 'data', (chunk) ->
-              console.log "data"
+              console.log chunk.toString('utf8')
+              #console.log "data"
             msg.on 'end', () ->
-              console.log "end"
+              throw "end"
+              #console.log "end"
       checkErr () ->
         return
 
@@ -44,7 +46,7 @@ recvBoxList = (boxes) ->
   doBoxes = (prefix, boxes) ->
     for box, properties of boxes
       path = "#{prefix}#{box}"
-      if 'NOSELECT' not of properties.attribs
+      if 'NOSELECT' not in properties.attribs
         withConnection conn, (conn) ->
           conn.openBox path, true, checkErr(recvBox)
       if properties.children?
